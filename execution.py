@@ -325,7 +325,7 @@ def main(training_model,folder_data='data/raw_trial', log_file='experiment_resul
                                     writer.writerow(['Dataset','Model', 'Radius', 'Bits', 'Tokenizer', 'Sketch', 'Mode' ,'Accuracy', 'MCC'])
                                 
                                 # Write the Result Row
-                                writer.writerow([file,training_model, radius, bits, tokenizer,sketch, mode ,acc, mcc])
+                                writer.writerow([file_name,training_model, radius, bits, tokenizer,sketch, mode ,acc, mcc])
                                 
                             print(f"Saved results to {log_file} (Acc: {acc:.4f}, MCC: {mcc:.4f})")
                             

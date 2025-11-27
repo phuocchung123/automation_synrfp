@@ -164,7 +164,7 @@ def train_mlp(x_train, x_test, y_train, y_test, device, epochs =100, batch_size=
     x_test = torch.tensor(x_test, dtype = torch.float32).to(device)
     y_train = torch.tensor(y_train, dtype = torch.long).to(device)
     y_test = torch.tensor(y_test,dtype = torch.long).to(device)
-    model = MLP(x_train.shape[1], len(torch.unique(y_train)))
+    model = MLP(x_train.shape[1], len(torch.unique(y_train))).to(device)
     
     train_dataset = TensorDataset(x_train, y_train)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle = True)

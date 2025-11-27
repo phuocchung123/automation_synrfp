@@ -316,7 +316,7 @@ def main(training_model,folder_data='data/raw_trial', log_file='experiment_resul
                         if  x_test.shape[0] != y_test.shape[0]:
                             continue
                         # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-                        device = torch.device("cpu")
+                        device = torch.device("cuda:0")
                         if training_model == 'knn':
                             acc, mcc = train_knn(x_train, x_test, y_train, y_test)
                         elif training_model == 'mlp':

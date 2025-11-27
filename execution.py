@@ -180,7 +180,7 @@ def train_mlp(x_train, x_test, y_train, y_test, device, epochs =100, batch_size=
     best_loss = float('inf')
     best_weight = None
 
-    for epoch in tqdm(range(epochs)):
+    for epoch in range(epochs):
         epoch_loss =0
         for batch_x, batch_y in train_loader:
             logits = model(batch_x)
@@ -210,7 +210,7 @@ def train_mlp(x_train, x_test, y_train, y_test, device, epochs =100, batch_size=
         for batch_x, batch_y in test_loader:
             test_logits = model(batch_x)
 
-            _, preds = torch.max(logits, 1)
+            _, preds = torch.max(test_logits, 1)
 
             all_preds.extend(preds.cpu().numpy())
             all_labels.extend(batch_y.cpu().numpy())

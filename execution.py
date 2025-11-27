@@ -158,7 +158,7 @@ class MLP(nn.Module):
     def forward(self, x):
         return self.layer_1(x)
     
-def train_mlp(x_train, x_test, y_train, y_test, device, epochs =100, batch_size=32, lr=0.0001):
+def train_mlp(x_train, x_test, y_train, y_test, device, epochs =100, batch_size=128, lr=0.0001):
     start = time.perf_counter()
     x_train = torch.tensor(x_train, dtype=torch.float32).to(device)
     x_test = torch.tensor(x_test, dtype = torch.float32).to(device)

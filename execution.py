@@ -14,6 +14,8 @@ import numpy as np
 import copy
 import os
 import csv
+import time
+from datetime import timedelta
 from utils import setup_logging, configure_warnings_and_logs
 from torch.utils.data import DataLoader, TensorDataset
 configure_warnings_and_logs(ignore_warnings=True, disable_rdkit_logs=True)
@@ -131,7 +133,7 @@ def standard_rxn(df):
 
 def read_data(path):
     df = pd.read_csv(path, compression='gzip')
-    df = standard_rxn(df)
+    # df = standard_rxn(df)
     df_train = df[df['split']=='train']
     df_test = df[df['split']=='test']
     df_train = df_train.reset_index()
@@ -139,7 +141,7 @@ def read_data(path):
     return df_train, df_test 
 
 def train_knn(x_train, x_test, y_train, y_test):
-    classifier = KNeighborsClassifier(n_neighbors=5,n_jobs=24)
+    classifier = KNeighborsClassifier(n_neighbors=5,n_jobs=14)
     # x_train = np.array(x_train)
     # x_test = np.array(x_test)
     # y_train = np.array(y_train)
@@ -157,6 +159,7 @@ class MLP(nn.Module):
         return self.layer_1(x)
     
 def train_mlp(x_train, x_test, y_train, y_test, device, epochs =100, batch_size=32, lr=0.0001):
+    start = time.perf_counter()
     x_train = torch.tensor(x_train, dtype=torch.float32).to(device)
     x_test = torch.tensor(x_test, dtype = torch.float32).to(device)
     y_train = torch.tensor(y_train, dtype = torch.long).to(device)
@@ -218,6 +221,11 @@ def train_mlp(x_train, x_test, y_train, y_test, device, epochs =100, batch_size=
     acc = accuracy_score(true_values, predict_values)
     mcc = matthews_corrcoef(true_values, predict_values)
 
+    end = time.perf_counter()
+    time_process = end - start
+    train_formatted = str(timedelta(seconds=time_process))
+    print(f"MLP time (Formatted): {train_formatted}")
+
     return acc, mcc
 
 def train_xgboost(x_train, x_test, y_train, y_test):
@@ -229,14 +237,20 @@ def train_xgboost(x_train, x_test, y_train, y_test):
         n_estimators=100, 
         learning_rate=0.0001, 
         use_label_encoder=False, 
-        eval_metric='mlogloss'
+        eval_metric='mlogloss',
+        n_jobs=14
     )
+    start = time.perf_counter()
     xgb_model.fit(x_train, y_train)
 
     preds = xgb_model.predict(x_test)
 
     acc = accuracy_score(y_test, preds)
     mcc = matthews_corrcoef(y_test, preds)
+    end = time.perf_counter()
+    time_process = end - start
+    train_formatted = str(timedelta(seconds=time_process))
+    print(f"XGBoost time (Formatted): {train_formatted}")
 
     return acc, mcc
 
@@ -339,8 +353,8 @@ if __name__ == "__main__":
     # for model in models_to_run:
     #     # This will append 3 rows to 'experiment_results.csv'
     #     main(training_model=model, folder_data='data/raw_trial')
-    main('knn', folder_data='data/raw_new')
-    # main('mlp')
+    main('mlp', folder_data='data/raw_std')
+    # main('mlp', folder_data='data/raw_new')
     # main('xgb')
 
 

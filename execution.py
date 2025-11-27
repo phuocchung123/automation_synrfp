@@ -180,7 +180,7 @@ def train_mlp(x_train, x_test, y_train, y_test, device, epochs =100, batch_size=
     best_loss = float('inf')
     best_weight = None
 
-    for epoch in range(epochs):
+    for epoch in tqdm(range(epochs)):
         epoch_loss =0
         for batch_x, batch_y in train_loader:
             logits = model(batch_x)

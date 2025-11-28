@@ -131,7 +131,7 @@ def standard_rxn(df):
 
 def read_data(path):
     df = pd.read_csv(path, compression='gzip')
-    df = standard_rxn(df)
+    # df = standard_rxn(df)
     df_train = df[df['split']=='train']
     df_test = df[df['split']=='test']
     df_train = df_train.reset_index()
@@ -139,7 +139,7 @@ def read_data(path):
     return df_train, df_test 
 
 def train_knn(x_train, x_test, y_train, y_test):
-    classifier = KNeighborsClassifier(n_neighbors=5,n_jobs=24)
+    classifier = KNeighborsClassifier(n_neighbors=5,n_jobs=35)
     # x_train = np.array(x_train)
     # x_test = np.array(x_test)
     # y_train = np.array(y_train)
@@ -229,7 +229,8 @@ def train_xgboost(x_train, x_test, y_train, y_test):
         n_estimators=100, 
         learning_rate=0.0001, 
         use_label_encoder=False, 
-        eval_metric='mlogloss'
+        eval_metric='mlogloss',
+        n_jobs=35
     )
     xgb_model.fit(x_train, y_train)
 
@@ -339,7 +340,7 @@ if __name__ == "__main__":
     # for model in models_to_run:
     #     # This will append 3 rows to 'experiment_results.csv'
     #     main(training_model=model, folder_data='data/raw_trial')
-    main('knn', folder_data='data/raw_new')
+    main('knn', folder_data='data/raw_std')
     # main('mlp')
     # main('xgb')
 
